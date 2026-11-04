@@ -1,0 +1,24 @@
+server:
+  transport: http
+  host: 127.0.0.1
+  port: 8080
+  request_timeout: 45s
+  shutdown_timeout: 5s
+  max_concurrent_requests: 2
+  max_request_bytes: 16384
+http:
+  timeout: 20s
+  max_response_bytes: 5242880
+  max_redirects: 5
+search:
+  interval: 2s
+  default_limit: 5
+  max_limit: 10
+fetch:
+  default_max_chars: 20000
+  max_chars: 50000
+logging:
+  level: INFO
+  output: console
+  directory: logs
+  log_responses: false

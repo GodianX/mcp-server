@@ -1,0 +1,36 @@
+version: '3'
+
+env:
+  GOTOOLCHAIN: go1.27.3
+
+vars:
+  GOTOOL: go tool -modfile=tools/go.mod
+
+tasks:
+  install:
+    cmds:
+      - go mod tidy
+      - go -C tools mod tidy
+  build:
+    cmds:
+      - go build -o bin/web-search ./cmd/app
+  run:
+    cmds:
+      - go run ./cmd/app -config config.yaml
+  lint_check:
+    aliases: [lc]
+    cmds:
+      - '{{.GOTOOL}} golangci-lint run'
+  lint_fix:
+    aliases: [lcf]
+    cmds:
+      - '{{.GOTOOL}} golangci-lint fmt'
+      - '{{.GOTOOL}} golangci-lint run --fix --disable=noinlineerr'
+  test:
+    cmds:
+      - go test -race -coverprofile=coverage.out ./...
+  test-live:
+    env:
+      WEB_SEARCH_LIVE: '1'
+    cmds:
+      - go test -count=1 -run TestLive -v ./internal/root -args -live

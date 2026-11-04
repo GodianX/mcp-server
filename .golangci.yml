@@ -1,0 +1,467 @@
+version: "2"
+
+run:
+  timeout: 10m
+  tests: true
+  allow-parallel-runners: true
+  go: '1.27'
+  modules-download-mode: readonly
+
+linters:
+  default: all
+  disable:
+    - gochecknoinits
+    - nolintlint
+    - nilnil
+    - dupl
+    - ireturn
+    - wrapcheck
+    - varnamelen
+    - gochecknoglobals
+    - exhaustruct
+    - exhaustruct_v5
+    - gomodguard
+    - depguard
+    - wsl
+    - tparallel
+    - paralleltest
+    - tagliatelle
+    - nonamedreturns
+    - cyclop
+    - godox
+    - nosprintfhostport
+    - godot
+    - err113
+
+  exclusions:
+    rules:
+      - linters:
+          - errcheck
+        source: 'errors\.AsType\['
+
+      - path: _test\.go
+        linters:
+          - funlen
+          - gocognit
+          - goconst
+          - gosec
+          - mnd
+          - dupl
+          - errcheck
+          - forcetypeassert
+          - wrapcheck
+
+      - path: internal/root/
+        linters:
+          - funlen
+
+      - path: migrations/
+        linters:
+          - all
+
+      - path: ".*\\.pb\\.go$"
+        linters:
+          - all
+
+      - path: cmd/docs/
+        linters:
+          - all
+
+      - source: "TODO"
+        linters:
+          - godox
+
+  settings:
+    cyclop:
+      max-complexity: 15
+      package-average: 5.0
+
+    gocognit:
+      min-complexity: 20
+
+    gocyclo:
+      min-complexity: 15
+
+    funlen:
+      lines: 80
+      statements: 50
+      ignore-comments: true
+
+    lll:
+      line-length: 140
+      tab-width: 4
+
+    tagliatelle:
+      case:
+        rules:
+          json: snake
+          yaml: snake
+          xml: snake
+          bson: snake
+          mapstructure: snake
+          env: upperSnake
+          envconfig: upperSnake
+
+    tagalign:
+      align: true
+      sort: true
+      order:
+        - gorm
+        - json
+        - binding
+        - yaml
+        - xml
+        - bson
+        - validate
+        - mapstructure
+        - envconfig
+        - form
+        - default
+        - extensions
+        - enums
+
+    nlreturn:
+      block-size: 2
+
+    godot:
+      scope: declarations
+      capital: true
+
+    varnamelen:
+      min-name-length: 2
+      ignore-type-assert-ok: true
+      ignore-map-index-ok: true
+      ignore-chan-recv-ok: true
+      ignore-names:
+        - err
+        - ok
+        - id
+        - tx
+        - db
+        - wg
+        - mu
+        - ctx
+        - fn
+        - i
+        - j
+        - k
+        - v
+        - c
+        - w
+        - r
+
+    nonamedreturns:
+      report-error-in-defer: true
+
+    revive:
+      severity: error
+      enable-all-rules: false
+      rules:
+        - name: blank-imports
+        - name: context-as-argument
+          arguments:
+            - allowTypesBefore: "*testing.T"
+        - name: context-keys-type
+        - name: dot-imports
+        - name: empty-block
+        - name: error-naming
+        - name: error-return
+        - name: error-strings
+        - name: errorf
+          arguments:
+            - checkPrivateReceivers
+            - sayRepetitiveInsteadOfStutters
+        - name: increment-decrement
+        - name: indent-error-flow
+        - name: range
+        - name: receiver-naming
+        - name: redefines-builtin-id
+        - name: superfluous-else
+        - name: time-naming
+        - name: unexported-return
+        - name: unreachable-code
+        - name: unused-parameter
+        - name: var-declaration
+        - name: var-naming
+          arguments:
+            - []
+            - []
+            - - skip-initialism-name-checks: true
+                upper-case-const: true
+                skip-package-name-checks: true
+                skip-package-name-collision-with-go-std: true
+                extra-bad-package-names: []
+
+    errcheck:
+      check-type-assertions: true
+      check-blank: true
+      exclude-functions:
+        - io.Copy
+        - (io.Closer).Close
+        - (*os.File).Close
+        - (*github.com/xuri/excelize/v2.File).Close
+        - (*pgx.Conn).Close
+
+    gocritic:
+      enabled-tags:
+        - diagnostic
+        - style
+        - performance
+        - experimental
+        - opinionated
+      disabled-checks:
+        - whyNoLint
+        - hugeParam
+        - rangeValCopy
+        - commentFormatting
+        - paramTypeCombine
+
+    govet:
+      enable-all: true
+      disable:
+        - fieldalignment
+        - shadow
+    staticcheck:
+      dot-import-whitelist:
+        - fmt
+      checks:
+        - SA1000
+        - SA1001
+        - SA1002
+        - SA1003
+        - SA1004
+        - SA1005
+        - SA1006
+        - SA1007
+        - SA1008
+        - SA1010
+        - SA1011
+        - SA1012
+        - SA1013
+        - SA1014
+        - SA1015
+        - SA1016
+        - SA1017
+        - SA1018
+        - SA1019
+        - SA1020
+        - SA1021
+        - SA1023
+        - SA1024
+        - SA1025
+        - SA1026
+        - SA1027
+        - SA1028
+        - SA1029
+        - SA1030
+        - SA1031
+        - SA1032
+        - SA2000
+        - SA2001
+        - SA2002
+        - SA2003
+        - SA3000
+        - SA3001
+        - SA4000
+        - SA4001
+        - SA4003
+        - SA4004
+        - SA4005
+        - SA4006
+        - SA4008
+        - SA4009
+        - SA4010
+        - SA4011
+        - SA4012
+        - SA4013
+        - SA4014
+        - SA4015
+        - SA4016
+        - SA4017
+        - SA4018
+        - SA4019
+        - SA4020
+        - SA4021
+        - SA4022
+        - SA4023
+        - SA4024
+        - SA4025
+        - SA4026
+        - SA4027
+        - SA4028
+        - SA4029
+        - SA4030
+        - SA4031
+        - SA4032
+        - SA5000
+        - SA5001
+        - SA5002
+        - SA5003
+        - SA5004
+        - SA5005
+        - SA5007
+        - SA5008
+        - SA5009
+        - SA5010
+        - SA5011
+        - SA5012
+        - SA6000
+        - SA6001
+        - SA6002
+        - SA6003
+        - SA6005
+        - SA6006
+        - SA9001
+        - SA9002
+        - SA9003
+        - SA9004
+        - SA9005
+        - SA9006
+        - SA9007
+        - SA9008
+        - SA9009
+        - ST1001
+        - ST1003
+        - ST1005
+        - ST1006
+        - ST1008
+        - ST1011
+        - ST1012
+        - ST1013
+        - ST1015
+        - ST1016
+        - ST1017
+        - ST1018
+        - ST1019
+        - ST1020
+        - ST1021
+        - ST1022
+        - ST1023
+        - S1000
+        - S1001
+        - S1002
+        - S1003
+        - S1004
+        - S1005
+        - S1006
+        - S1007
+        - S1008
+        - S1009
+        - S1010
+        - S1011
+        - S1012
+        - S1016
+        - S1017
+        - S1018
+        - S1019
+        - S1020
+        - S1021
+        - S1023
+        - S1024
+        - S1025
+        - S1028
+        - S1029
+        - S1030
+        - S1031
+        - S1032
+        - S1033
+        - S1034
+        - S1035
+        - S1036
+        - S1037
+        - S1038
+        - S1039
+        - S1040
+        - QF1001
+        - QF1002
+        - QF1003
+        - QF1004
+        - QF1005
+        - QF1006
+        - QF1007
+        - QF1008
+        - QF1009
+        - QF1010
+        - QF1011
+        - QF1012
+    gosec:
+      excludes:
+        - G104
+        - G117
+      config:
+        global:
+          audit: true
+
+    rowserrcheck:
+      packages:
+        - database/sql
+        - gorm.io/gorm
+
+    testifylint:
+      enable-all: true
+      disable:
+        - require-error
+
+
+
+    unparam:
+      check-exported: false
+
+    mnd:
+      checks:
+        - argument
+        - case
+        - condition
+        - return
+      ignored-numbers:
+        - "0"
+        - "1"
+        - "2"
+        - "10"
+        - "24"
+        - "100"
+        - "365"
+      ignored-functions:
+        - "make"
+        - "context.WithTimeout"
+        - "time.*"
+      ignored-files:
+        -  testhelpers/*.go
+
+    forbidigo:
+      forbid:
+        - pattern: "^fmt\\.Print.*$"
+          msg: "use structured logging instead (slog)"
+      exclude-godoc-examples: true
+      analyze-types: true
+
+    prealloc:
+      simple: true
+      for-loops: true
+
+    interfacebloat:
+      max: 10
+
+    nestif:
+      min-complexity: 3
+
+issues:
+  max-issues-per-linter: 50
+  max-same-issues: 5
+  new: false
+
+formatters:
+  enable:
+    - gofumpt
+    - golines
+    - swaggo
+
+  settings:
+    gofumpt:
+      module-path: web-search
+    golines:
+      max-len: 140
+      tab-len: 4
+      shorten-comments: true
+      reformat-tags: true
+      chain-split-dots: false
